@@ -34,7 +34,7 @@ const account4 = {
 };
 
 const accounts = [account1, account2, account3, account4];
-
+const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 // Elements
 const labelWelcome = document.querySelector('.welcome');
 const labelDate = document.querySelector('.date');
@@ -64,3 +64,68 @@ const inputClosePin = document.querySelector('.form__input--pin');
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
 /////*******   APP   */
+const displayMovements = function (movements) {
+  containerMovements.innerHTML = '';
+  movements.forEach(function (mov, i) {
+    const type = mov > 0 ? 'deposit' : 'withdrawal';
+
+    const html = `<div class="movements__row">
+          <div class="movements__type movements__type--${type}">${
+      i + 1
+    } ${type}</div>
+          
+          <div class="movements__value">${mov}</div>
+        </div>`;
+
+    containerMovements.insertAdjacentHTML('afterbegin', html);
+  });
+};
+
+displayMovements(account1.movements);
+
+//////Create User Names//////
+
+const createUserNames = function (accaunts) {
+  accounts.forEach(function (acc) {
+    acc.userName = acc.owner
+      .toLowerCase()
+      .split(' ')
+      .map((name) => name[0])
+      .join('');
+  });
+};
+createUserNames(accounts);
+
+///////Calc and Print Balance
+
+const calcAndPrintBalance = function (movements) {
+  const balance = movements.reduce((acc, value) => acc + value, 0);
+  labelBalance.textContent = balance;
+};
+calcAndPrintBalance(account1.movements);
+//////////////////////////////
+////////////    LECTURE
+/////////////////////////////////
+////// Eur to USD
+
+const eurToUsd = 1.1;
+
+const movementsToUsd = movements.map((mov) => mov * eurToUsd);
+
+///// Movements Descriptions
+const movementsDescriptions = movements.map(
+  (mov, i) =>
+    `Movements ${i + 1} : You ${mov > 0 ? 'deposited' : 'withdrew'} ${Math.abs(
+      mov
+    )}`
+);
+
+const user = 'Eduards Leimanis Harijs';
+
+const maximu = movements.reduce((acc, value) => {
+  if (acc > value) {
+    return acc;
+  } else {
+    return value;
+  }
+}, movements[0]);
