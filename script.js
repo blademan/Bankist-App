@@ -1,10 +1,14 @@
 'use strict';
 
-/////////////////////////////////////////////////
-/////////////////////////////////////////////////
-// BANKIST APP
+//////////////////////////////////////////////////
+/////    BANKIST APP
+/////
+/////////////////////////////////////////////
 
-// Data
+////////////////////////////////
+////// Data
+////////////////////////////////
+
 const account1 = {
   owner: 'Jonas Schmedtmann',
   movements: [200, 450, -400, 3000, -650, -130, 70, 1300],
@@ -61,9 +65,10 @@ const inputLoanAmount = document.querySelector('.form__input--loan-amount');
 const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
 
-/////////////////////////////////////////////////
-/////////////////////////////////////////////////
-/////*******   APP   */
+////////////////////////////////////////
+///////    Movements    ////////////////
+////////////////////////////////////////
+
 const displayMovements = function (movements) {
   containerMovements.innerHTML = '';
   movements.forEach(function (mov, i) {
@@ -74,7 +79,7 @@ const displayMovements = function (movements) {
       i + 1
     } ${type}</div>
           
-          <div class="movements__value">${mov}</div>
+          <div class="movements__value">${mov}€</div>
         </div>`;
 
     containerMovements.insertAdjacentHTML('afterbegin', html);
@@ -83,9 +88,47 @@ const displayMovements = function (movements) {
 
 displayMovements(account1.movements);
 
-//////Create User Names//////
+/////////////////////////////////
+/////    DISPLAY BALANCE  ///////
+/////////////////////////////////
 
-const createUserNames = function (accaunts) {
+const calcDisplayBalance = function (movements) {
+  const balance = movements.reduce((acc, mov) => acc + mov, 0);
+  labelBalance.textContent = `${balance}`;
+};
+
+calcDisplayBalance(account1.movements);
+
+//////////////////////////////////////
+//////// Display Summary  ////////////
+//////////////////////////////////////
+
+const calcDisplaySummary = function (movements) {
+  const incomes = movements
+    .filter((mov) => mov > 0)
+    .reduce((acc, mov) => acc + mov, 0);
+  labelSumIn.textContent = `${incomes}€`;
+
+  const outcomes = movements
+    .filter((mov) => mov < 0)
+    .reduce((acc, mov) => acc + mov, 0);
+  labelSumOut.textContent = `${Math.abs(outcomes)}€`;
+
+  const interest = movements
+    .filter((mov) => mov > 0)
+    .map((mov) => (mov * 1.2) / 100)
+    .filter((mov) => mov >= 1)
+    .reduce((acc, mov) => acc + mov, 0);
+  labelSumInterest.textContent = `${interest}€`;
+};
+
+calcDisplaySummary(account1.movements);
+
+////////////////////////////////////
+//////   Create User Names   //////
+///////////////////////////////////
+
+const createUserNames = function (accounts) {
   accounts.forEach(function (acc) {
     acc.userName = acc.owner
       .toLowerCase()
@@ -96,36 +139,41 @@ const createUserNames = function (accaunts) {
 };
 createUserNames(accounts);
 
-///////Calc and Print Balance
+//////////////////////////////////
+///   Calc and Print Balance  ////
+//////////////////////////////////
 
 const calcAndPrintBalance = function (movements) {
-  const balance = movements.reduce((acc, value) => acc + value, 0);
-  labelBalance.textContent = balance;
+  const balance = movements.reduce((acc, mov) => acc + mov, 0);
+  labelBalance.textContent = `${balance}€`;
 };
 calcAndPrintBalance(account1.movements);
-//////////////////////////////
-////////////    LECTURE
-/////////////////////////////////
-////// Eur to USD
 
-const eurToUsd = 1.1;
+//////////////////////////////////
+////////////    LECTURE  /////////
+//////////////////////////////////
 
-const movementsToUsd = movements.map((mov) => mov * eurToUsd);
+//////////////////////////
+////// Eur to USD ////////
+//////////////////////////
+// const eurToUsd = 1.1;
 
-///// Movements Descriptions
-const movementsDescriptions = movements.map(
-  (mov, i) =>
-    `Movements ${i + 1} : You ${mov > 0 ? 'deposited' : 'withdrew'} ${Math.abs(
-      mov
-    )}`
-);
+// const movementsToUsd = movements.map((mov) => mov * eurToUsd);
 
-const user = 'Eduards Leimanis Harijs';
+// ///// Movements Descriptions
+// const movementsDescriptions = movements.map(
+//   (mov, i) =>
+//     `Movements ${i + 1} : You ${mov > 0 ? 'deposited' : 'withdrew'} ${Math.abs(
+//       mov
+//     )}`
+// );
 
-const maximu = movements.reduce((acc, value) => {
-  if (acc > value) {
-    return acc;
-  } else {
-    return value;
-  }
-}, movements[0]);
+// const user = 'Eduards Leimanis Harijs';
+
+// const maximu = movements.reduce((acc, value) => {
+//   if (acc > value) {
+//     return acc;
+//   } else {
+//     return value;
+//   }
+// }, movements[0]);
